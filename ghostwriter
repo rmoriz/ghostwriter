@@ -1,0 +1,49 @@
+#!/bin/bash
+
+usage() {
+  echo "USAGE:"
+  echo "       ./ghostwriter <login> <password>"
+}
+
+setup_switcher() {
+  echo "- installing keyboardSwitcher via brew..."
+  brew tap lutzifer/homebrew-tap
+  brew install keyboardSwitcher
+}
+
+revert_layout() {
+  keyboardSwitcher select "$org_keyboard"
+}
+
+command -v keyboardSwitcher >/dev/null 2>&1 || setup_switcher
+
+if [ $# -eq 0 ]; then
+  usage
+  exit
+fi
+
+echo "- saving keyboard layout..."
+org_keyboard=$(keyboardSwitcher get 2>&1)
+
+echo "- setting keyboard layout to U.S...."
+keyboardSwitcher select "U.S."
+trap revert_layout EXIT INT
+
+echo "- you have 5 seconds to switch focus to noVNC window..."
+osascript <<END
+  set login to "$1"
+  set pw to "$2"
+  tell application "System Events"
+    delay 5
+    keystroke login
+    delay 1
+    keystroke return
+    delay 1
+    keystroke pw
+    delay 1
+    keystroke return
+  end tell
+END
+
+echo "- done."
+echo
