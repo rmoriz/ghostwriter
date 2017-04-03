@@ -19,3 +19,7 @@ ghostwriter root '%$TZ%$G!231'
 - you have 5 seconds to switch focus to noVNC window...
 ```
 ... now hurry up and switch to the right chrome tab ...
+
+## Thanks
+
+- https://github.com/Lutzifer/keyboardSwitcher
